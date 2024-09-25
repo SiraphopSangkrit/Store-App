@@ -9,6 +9,10 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use LaravelAndVueJS\Traits\LaravelPermissionToVueJS;
+use Spatie\Permission\Traits\HasRoles;
+use App\Models\Category;
+use App\Models\Product;
 
 class User extends Authenticatable
 {
@@ -17,6 +21,8 @@ class User extends Authenticatable
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use LaravelPermissionToVueJS;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -61,5 +67,13 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function category()
+    {
+        return $this->hasMany(Category::class);
+    }
+    public function product()
+    {
+        return $this->hasMany(Product::class);
     }
 }
