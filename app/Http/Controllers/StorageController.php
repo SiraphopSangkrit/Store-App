@@ -17,26 +17,42 @@ class StorageController extends Controller
     public function StorageIndex()
     {
         return Inertia::render(
-            'Storages/List',[
-                'products'=>Product::with('category')->get(),
-                'categories'=> Category::all()
+            'Storages/List',
+            [
+                'products' => Product::with('category')->get(),
+                'categories' => Category::all()
             ]
         );
     }
+    public function dashboard()
+    {
 
+        $products = Product::all();
+        $productCount = $products->count();
+        return Inertia::render(
+            'Dashboard',
+            [
+                'products' => $products,
+                'ProductCount' => $productCount,
+                'categories' => Category::all()
+            ]
+        );
+    }
     public function CategoryIndex()
     {
         return Inertia::render(
-            'Category/Category',[
-                'categories'=> Category::all()
-            ]);
+            'Category/Category',
+            [
+                'categories' => Category::all()
+            ]
+        );
     }
     public function CategoryStore(Request $request)
     {
         $category = new Category;
-        $category->title=$request->input('cname');
-$category->create_by_user=$request->user()->id;
-$category->save();
+        $category->title = $request->input('cname');
+        $category->create_by_user = $request->user()->id;
+        $category->save();
         return back()->with('message', 'Category added successfully');
     }
     /**
@@ -53,13 +69,27 @@ $category->save();
     public function StorageStore(Request $request)
     {
         $product = new Product;
-        $product->product_name=$request->input('pname');
-        $product->product_color=$request->input('pcolor');
-        $product->product_price=$request->input('pprice');
-        $product->product_image=$request->input('pimage');
-        $product->category_id=$request->input('cid');
-        $product->product_qty=$request->input('pqty');
-        $product->create_by_user=$request->user()->id;
+        $product->product_name = $request->input('pname');
+        $product->product_color = $request->input('pcolor');
+        $product->product_price = $request->input('pprice');
+        $product->product_image = $request->input('pimage');
+        $product->category_id = $request->input('cid');
+        $product->product_qty = $request->input('pqty');
+        $product->create_by_user = $request->user()->id;
+        $product->save();
+        return back();
+    }
+
+    public function StorageUpdate(Request $request, string $id)
+    {
+        $product = Product::find($id);
+        $product->product_name = $request->input('peditname');
+        $product->product_color = $request->input('peditcolor');
+        $product->product_price = $request->input('peditprice');
+        $product->product_image = $request->input('peditimage');
+        $product->category_id = $request->input('ceditid');
+        $product->product_qty = $request->input('peditqty');
+        $product->create_by_user = $request->user()->id;
         $product->save();
         return back();
     }
@@ -91,8 +121,10 @@ $category->save();
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function StorageDestroy(string $id)
     {
-        //
+        $product = Product::find($id);
+        $product->delete();
+        return back();
     }
 }
