@@ -19,9 +19,9 @@ return new class extends Migration
                 $table->double('product_price');
                 $table->string('product_image')->nullable();
                 $table->bigInteger('create_by_user')->unsigned()->nullable();
-                $table->foreign('create_by_user')->references('id')->on('users');
+                $table->foreign('create_by_user')->references('id')->on('users')->onDelete('cascade');
                 $table->bigInteger('category_id')->unsigned()->nullable();
-                $table->foreign('category_id')->references('id')->on('category');
+                $table->foreign('category_id')->references('id')->on('category')->onDelete('cascade');
             $table->timestamps();
         });
     }

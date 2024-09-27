@@ -15,20 +15,37 @@ function submit() {
         onSuccess: () => {
             handleClose();
             handleSubmit();
+            successMessage.value = 'Category created successfully!';
+            showMessage.value = true;
             form.cname = ''; // Clear the form
         },
     });
 }
+function CategoryDelete(categoryId) {
+    router.delete(route('category.destroy', categoryId), {
+        onSuccess: () => {
+            handleSubmit();
+            handleClose();
+            successMessage.value = 'Category deleted successfully!';
+            showMessage.value = true;
+        },
+    });
+}
+
+const showConfirmDeleteModal = ref(false);
+
 const showMessage = ref(false);
+
+const successMessage = ref('');
+
 const showModal = ref(false);
 
 const handleClose = () => {
     showModal.value = false;
+    showConfirmDeleteModal.value = false;
 };
 const handleSubmit = () => {
     console.log('Form submitted:');
-    showMessage.value = true;
-    // Hide the message after 3 seconds
     setTimeout(() => {
         showMessage.value = false;
     }, 3000);
@@ -37,12 +54,18 @@ defineProps({ categories: Object })
 </script>
 <template>
     <AppLayout title="Category">
+        <ActionMessage :on="showMessage">
+            <div v-if="successMessage"
+                class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+                role="alert">
+                <span class="font-medium">{{ successMessage }}</span>
+            </div>
+        </ActionMessage>
         <div
             class="flex justify-between dark:bg-gray-800 dark:text-white text-gray-700 text-3xl sm:rounded-lg my-3 bg-white">
             <div class="px-6 py-3">
                 Category
             </div>
-            <ActionMessage :on="showMessage">Category create sucess!!</ActionMessage>
             <button @click="showModal = true"
                 class="m-1 block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 type="button">
@@ -64,21 +87,37 @@ defineProps({ categories: Object })
 
                 <tbody>
                     <tr v-for="category in categories" :key="category.id"
-                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <th scope="row"
-                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ category.title }}
-                            </th>
-                            <td class="px-6 py-4 flex justify-center items-center">
-                                <button type="button"
-                                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
-                            </td>
-                        </tr>
+                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{ category.title }}
+                        </th>
+                        <td class="px-6 py-4 flex justify-center items-center">
+                            <button type="button" @click="showConfirmDeleteModal = true"
+                                class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
+                        </td>
+                        <Modal :show="showConfirmDeleteModal" @close="handleClose" maxWidth="lg" closeable>
+                            <template #default>
+                            <div
+                                class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                    Confirm delete category?
+                                </h3>
+                            </div>
+                                <div class="p-4 md:p-5 flex items-center justify-center">
+                                    <div class="space-y-4">
+                                            <button type="button" @click="CategoryDelete(category.id)"
+                                                class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
+                                                <button type="button" @click="showConfirmDeleteModal= false"
+                                                class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-950 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Cancel</button>
+                                    </div>
+                                </div>
+                        </template>
+                        </Modal>
+                    </tr>
 
-                    </tbody>
+                </tbody>
             </table>
         </div>
-
         <Modal :show="showModal" @close="handleClose" maxWidth="lg" closeable>
 
             <template #default>

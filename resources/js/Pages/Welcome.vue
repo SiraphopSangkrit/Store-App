@@ -79,7 +79,7 @@ function handleImageError() {
                                     @error="handleImageError"
                                 />
                                 <img
-                                    src="https://laravel.com/assets/img/welcome/docs-dark.svg"
+                                    src="https://img2.pic.in.th/pic/_OB_1245-21-11-18.jpg"
                                     alt="Laravel documentation screenshot"
                                     class="hidden aspect-video h-full w-full flex-1 rounded-[10px] object-top object-cover drop-shadow-[0px_4px_34px_rgba(0,0,0,0.25)] dark:block"
                                 />

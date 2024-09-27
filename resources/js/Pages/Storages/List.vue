@@ -101,9 +101,10 @@ defineProps({ categories: Object, products: Object })
 <template>
     <AppLayout title="Storages">
         <ActionMessage :on="showMessage">
-            <div v-if="successMessage" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+            <div v-if="successMessage"
+                class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
                 role="alert">
-                <span class="font-medium">{{successMessage}}</span>
+                <span class="font-medium">{{ successMessage }}</span>
             </div>
         </ActionMessage>
         <div
@@ -121,6 +122,9 @@ defineProps({ categories: Object, products: Object })
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Product Image
+                        </th>
                         <th scope="col" class="px-6 py-3">
                             Product name
                         </th>
@@ -144,6 +148,9 @@ defineProps({ categories: Object, products: Object })
                 <tbody>
                     <tr v-for="product in products" :key="product.id"
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th scope="row" class="px-6 py-4">
+                            {{ product.product_image }}
+                        </th>
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             {{ product.product_name }}
                         </th>

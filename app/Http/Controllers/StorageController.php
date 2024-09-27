@@ -55,6 +55,12 @@ class StorageController extends Controller
         $category->save();
         return back()->with('message', 'Category added successfully');
     }
+    public function CategoryDestroy($id)
+    {
+        $category = Category::find($id);
+        $category->delete();
+        return back();
+    }
     /**
      * Show the form for creating a new resource.
      */

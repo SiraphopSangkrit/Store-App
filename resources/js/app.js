@@ -19,6 +19,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .use(LaravelPermissionToVueJS)
             .mount(el);
     },
     progress: {

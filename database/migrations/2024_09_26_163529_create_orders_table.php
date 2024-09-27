@@ -12,12 +12,13 @@ return new class extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->date('order_date');
+            $table->timestamp('order_date');
             $table->integer('order_receive');
             $table->float('order_change');
             $table->float('order_total');
+            $table->string('status');
             $table->bigInteger('casher_id')->unsigned();
-            $table->foreign('casher_id')->references('id')->on('users');
+            $table->foreign('casher_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
