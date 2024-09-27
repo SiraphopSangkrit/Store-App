@@ -7,11 +7,12 @@ import NavLink from '@/Components/NavLink.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { reloadRolesAndPermissions } from 'laravel-permission-to-vuejs'
+import { usePermission } from '@/permission';
 
 const logout = () => {
     router.post(route('logout'));
 };
-
+const {hasRole}= usePermission();
 reloadRolesAndPermissions()
 </script>
 <template >
@@ -97,7 +98,7 @@ reloadRolesAndPermissions()
         <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
             <ul class="space-y-2 font-medium">
                 <li>
-                    <Link :href="route('dashboard')"
+                    <Link :href="route('dashboard')" v-if="hasRole('superadmin')||hasRole('admin')"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                     <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
@@ -110,7 +111,7 @@ reloadRolesAndPermissions()
                     </Link>
                 </li>
                 <li>
-                    <Link :href="route('storages.index')"
+                    <Link :href="route('storages.index')"v-if="hasRole('superadmin')||hasRole('admin')"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                     <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                          xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
@@ -122,7 +123,7 @@ reloadRolesAndPermissions()
                     </Link>
                 </li>
                 <li>
-                    <Link :href="route('category.index')"
+                    <Link :href="route('category.index')"v-if="hasRole('superadmin')||hasRole('admin')"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                     <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                         xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
@@ -132,20 +133,19 @@ reloadRolesAndPermissions()
                     <span class="ms-3">Category</span>
                     </Link>
                 </li>
-                <li v-if="is('superadmin')">
-                    <Link :href="route('order.index')"
+                <li >
+                    <Link :href="route('order.index')" v-if="hasRole('superadmin')||hasRole('admin')"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                     <svg class="w-[35px] h-[35px] text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312" />
                     </svg>
-
                     <span class="ms-3">Order</span>
                     </Link>
                 </li>
-                    <li v-if="is('superadmin')">
-                        <Link :href="route('user.index')"
+                    <li >
+                        <Link :href="route('user.index')" v-if="hasRole('superadmin')"
                             class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                             <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                  xmlns="http://www.w3.org/2000/svg" fill="currentColor"

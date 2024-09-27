@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -22,15 +24,16 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             'username' => ['required', 'string', 'max:255','unique:users'],
             'firstname' => ['required', 'string', 'max:255'],
-            'middlename' => ['required', 'string', 'max:255'],
+            'middlename' => ['max:255'],
             'lastname' => ['required', 'string', 'max:255'],
-            'tel' => ['required', 'string', 'max:255'],
+            'tel' => ['max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
-        return User::create([
+        return
+        $user = User::create([
             'username' => $input['username'],
             'firstname' => $input['firstname'],
             'middlename' => $input['middlename'],
@@ -39,5 +42,7 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
+        $user->assignRole('customer');
+        $user->save();
     }
 }
